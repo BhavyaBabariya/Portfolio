@@ -7,7 +7,7 @@
 ![About](Images/About.png)
 
 # skill Section
-![Skill](Images/skill.png)
+![Skill](Images/Skill.png)
 
 # portfolio Section
 ![portfolio](Images/portfolio.png)
