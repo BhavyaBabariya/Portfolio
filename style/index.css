@@ -266,7 +266,7 @@ h5 a:hover{
     color: white;
     font-size: 13px;
   }
-  .about_section .about_me_right_section button{
+  .about_section .about_me_right_section .btn{
     border-radius: 7px;
     font-size: 15px;
     color: white;
@@ -275,7 +275,7 @@ h5 a:hover{
     font-family: 'poppins',sans-serif;
     margin-top: 10px;
   }
-  .about_section .about_me_right_section button:hover{
+  .about_section .about_me_right_section .btn:hover{
     animation: swing;
     animation-duration: 0.5s;
   }
