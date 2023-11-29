@@ -340,7 +340,7 @@ h5 a:hover{
    /* Portfolio Section */
    .portfolio_section{
 	background: #282a39;
-	padding: 170px 0;
+	padding: 120px 0 0;
    }
    .portfolio_section .nav-tabs{
 	border: none;
@@ -370,8 +370,10 @@ h5 a:hover{
 
    /* Contact Section */
    .contact_section{
-	background: #282a39;
+	background: var(--background-color);
 	padding-bottom: 170px;
+	margin-top: 160px;
+	padding-top: 150px;
    }
    .contact_section .heading{
 	font-weight: 600;
@@ -410,6 +412,9 @@ h5 a:hover{
    }
    .contact_section ul li .fa{
 		color: var(--pink-color);
+   }
+   .contact_section .info{
+	margin-top: 20px;
    }
 
    @media (max-width:991px) and (min-width:768px) {
