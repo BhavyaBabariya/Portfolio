@@ -36,6 +36,14 @@ canvas.particles-js-canvas-el{
  	font-size: 26px;	
  }
 
+ .navbar.sticky {
+	position: fixed;
+	top: 0;
+	width: 75%;
+	z-index: 1000;
+	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
 .nav_section .navbar-brand span{
  	color: var(--pink-color);	
  } 
