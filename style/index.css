@@ -21,6 +21,38 @@ body{
 h1,h2,h3,h4,h5,h6,p,td,a{
 	cursor: pointer;
 }
+h1::selection{
+	background-color: var(--pink-color);
+}
+h2::selection{
+	background-color: var(--pink-color);
+}
+
+h3::selection{
+	background-color: var(--pink-color);
+}
+h4::selection{
+	background-color: var(--pink-color);
+}
+h5::selection{
+	background-color: var(--pink-color);
+}
+h6::selection{
+	background-color: var(--pink-color);
+}
+p::selection{
+	color: #fff;
+	background-color: var(--pink-color);
+}
+td::selection{
+	background-color: var(--pink-color);
+}
+a::selection{
+	background-color: var(--pink-color);
+}
+span::selection{
+	background-color: var(--pink-color);
+}
 canvas.particles-js-canvas-el{
 	position: absolute;
 	height: 100% !important;
