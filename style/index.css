@@ -50,40 +50,95 @@ body.menu-open {
 	}
 }
 
-h1,h2,h3,h4,h5,h6,p,td,a{
-	cursor: pointer;
-}
-h1::selection{
+/* Text Selection Styles */
+::selection {
 	background-color: var(--pink-color);
-}
-h2::selection{
-	background-color: var(--pink-color);
+	color: #ffffff;
 }
 
-h3::selection{
+::-moz-selection {
 	background-color: var(--pink-color);
+	color: #ffffff;
 }
-h4::selection{
+
+h1::selection,
+h1::-moz-selection {
 	background-color: var(--pink-color);
+	color: #ffffff;
 }
-h5::selection{
+
+h2::selection,
+h2::-moz-selection {
 	background-color: var(--pink-color);
+	color: #ffffff;
 }
-h6::selection{
+
+h3::selection,
+h3::-moz-selection {
 	background-color: var(--pink-color);
+	color: #ffffff;
 }
-p::selection{
-	color: #fff;
+
+h4::selection,
+h4::-moz-selection {
 	background-color: var(--pink-color);
+	color: #ffffff;
 }
-td::selection{
+
+h5::selection,
+h5::-moz-selection {
 	background-color: var(--pink-color);
+	color: #ffffff;
 }
-a::selection{
+
+h6::selection,
+h6::-moz-selection {
 	background-color: var(--pink-color);
+	color: #ffffff;
 }
-span::selection{
+
+p::selection,
+p::-moz-selection {
 	background-color: var(--pink-color);
+	color: #ffffff;
+}
+
+td::selection,
+td::-moz-selection {
+	background-color: var(--pink-color);
+	color: #ffffff;
+}
+
+a::selection,
+a::-moz-selection {
+	background-color: var(--pink-color);
+	color: #ffffff;
+}
+
+span::selection,
+span::-moz-selection {
+	background-color: var(--pink-color);
+	color: #ffffff;
+}
+
+li::selection,
+li::-moz-selection {
+	background-color: var(--pink-color);
+	color: #ffffff;
+}
+
+label::selection,
+label::-moz-selection {
+	background-color: var(--pink-color);
+	color: #ffffff;
+}
+
+input::selection,
+input::-moz-selection,
+textarea::selection,
+textarea::-moz-selection {
+	background-color: var(--pink-color);
+	color: #ffffff;
 }
 canvas.particles-js-canvas-el{
 	position: absolute;
