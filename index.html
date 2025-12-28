@@ -468,62 +468,49 @@
 			messageDiv.style.display = 'none';
 			messageDiv.classList.remove('alert-success', 'alert-danger');
 			
-			// Don't prevent default - let Netlify handle it
-			// But we'll enhance with AJAX for better UX
+			// Let Netlify handle the form submission
+			// The form will submit normally to Netlify
+			// We'll intercept and show a custom message
 			
 			// Get form data
 			var formData = new FormData(form);
 			
-			// Submit to Netlify via AJAX
+			// Submit to Netlify
 			fetch('/', {
 				method: 'POST',
 				headers: { "Content-Type": "application/x-www-form-urlencoded" },
 				body: new URLSearchParams(formData).toString()
 			})
-			.then(function(response) {
-				if (response.ok) {
-					// Success
-					messageDiv.classList.remove('alert-danger');
-					messageDiv.classList.add('alert-success');
-					messageDiv.innerHTML = 'Thank you! Your message has been sent successfully. I will get back to you soon.';
-					messageDiv.style.display = 'block';
-					form.reset(); // Reset form
-					
-					// Scroll to message
-					setTimeout(function() {
-						var messagePosition = messageDiv.getBoundingClientRect().top + window.pageYOffset - 100;
-						window.scrollTo({
-							top: messagePosition,
-							behavior: 'smooth'
-						});
-					}, 100);
-				} else {
-					throw new Error('Form submission failed');
-				}
+			.then(function() {
+				// Success - Netlify will handle the submission
+				messageDiv.classList.remove('alert-danger');
+				messageDiv.classList.add('alert-success');
+				messageDiv.innerHTML = 'Thank you! Your message has been sent successfully. I will get back to you soon.';
+				messageDiv.style.display = 'block';
+				form.reset(); // Reset form
+				
+				// Scroll to message
+				setTimeout(function() {
+					var messagePosition = messageDiv.getBoundingClientRect().top + window.pageYOffset - 100;
+					window.scrollTo({
+						top: messagePosition,
+						behavior: 'smooth'
+					});
+				}, 100);
 			})
 			.catch(function(error) {
-				// Error - but still allow form to submit normally as fallback
+				// Error
 				messageDiv.classList.remove('alert-success');
 				messageDiv.classList.add('alert-danger');
-				messageDiv.innerHTML = 'Sending your message... If this message persists, the form may have submitted successfully. Please check your email.';
+				messageDiv.innerHTML = 'Sorry, there was an error sending your message. Please try again later.';
 				messageDiv.style.display = 'block';
 				console.error('Form submission error:', error);
-				
-				// Allow normal form submission as fallback
-				setTimeout(function() {
-					form.submit();
-				}, 1000);
 			})
 			.finally(function() {
-				// Re-enable submit button after a delay
-				setTimeout(function() {
-					submitBtn.disabled = false;
-					submitBtn.innerHTML = originalBtnText;
-				}, 2000);
+				// Re-enable submit button
+				submitBtn.disabled = false;
+				submitBtn.innerHTML = originalBtnText;
 			});
-			
-			// Prevent default to handle via AJAX
-			e.preventDefault();
 		});
 	</script>
 </body>
