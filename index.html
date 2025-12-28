@@ -317,23 +317,27 @@
 						<!-- Success/Error Messages -->
 						<div id="form-message" class="alert" style="display: none;"></div>
 						
-						<form id="contact-form" name="contact" method="POST" netlify netlify-honeypot="bot-field" data-netlify="true">
+						<form id="contact-form" name="contact" method="POST" netlify netlify-honeypot="bot-field" data-netlify="true" novalidate>
 							<!-- Hidden field for Netlify bot protection -->
 							<input type="hidden" name="form-name" value="contact">
 							<p style="display: none;">
 								<label>Don't fill this out if you're human: <input name="bot-field" /></label>
 							</p>
 							<div class="form-group">
-								<input class="form-control" type="text" name="name" id="name" placeholder="Your Name" required>
+								<input class="form-control" type="text" name="name" id="name" placeholder="Your Name">
+								<div class="error-message" id="name-error"></div>
 							</div>
 							<div class="form-group">
-								<input class="form-control" type="email" name="email" id="email" placeholder="Your Email" required>
+								<input class="form-control" type="email" name="email" id="email" placeholder="Your Email">
+								<div class="error-message" id="email-error"></div>
 							</div>
 							<div class="form-group">
-								<input class="form-control" type="text" name="subject" id="subject" placeholder="Subject" required>
+								<input class="form-control" type="text" name="subject" id="subject" placeholder="Subject">
+								<div class="error-message" id="subject-error"></div>
 							</div>
 							<div class="form-group">
-								<textarea class="form-control" name="message" id="message" placeholder="Type your message..." cols="30" rows="10" required></textarea>
+								<textarea class="form-control" name="message" id="message" placeholder="Type your message..." cols="30" rows="10"></textarea>
+								<div class="error-message" id="message-error"></div>
 							</div>
 							<div class="form-group">
 								<button class="btn btn-light animate__animated" type="submit" id="submit-btn">Submit</button>
@@ -499,22 +503,230 @@
 			return false;
 		});
 
+		// Form Validation Functions
+		function validateName(name) {
+			if (!name || name.trim() === '') {
+				return 'Name is required';
+			}
+			if (name.trim().length < 2) {
+				return 'Name must be at least 2 characters';
+			}
+			if (!/^[a-zA-Z\s]+$/.test(name.trim())) {
+				return 'Name can only contain letters and spaces';
+			}
+			return '';
+		}
+
+		function validateEmail(email) {
+			if (!email || email.trim() === '') {
+				return 'Email is required';
+			}
+			var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailRegex.test(email.trim())) {
+				return 'Please enter a valid email address';
+			}
+			return '';
+		}
+
+		function validateSubject(subject) {
+			if (!subject || subject.trim() === '') {
+				return 'Subject is required';
+			}
+			if (subject.trim().length < 3) {
+				return 'Subject must be at least 3 characters';
+			}
+			return '';
+		}
+
+		function validateMessage(message) {
+			if (!message || message.trim() === '') {
+				return 'Message is required';
+			}
+			if (message.trim().length < 10) {
+				return 'Message must be at least 10 characters';
+			}
+			return '';
+		}
+
+		function showError(fieldId, errorMessage) {
+			var field = document.getElementById(fieldId);
+			var errorDiv = document.getElementById(fieldId + '-error');
+			
+			if (field && errorDiv) {
+				field.classList.add('error');
+				errorDiv.textContent = errorMessage;
+				errorDiv.style.display = 'block';
+			}
+		}
+
+		function clearError(fieldId) {
+			var field = document.getElementById(fieldId);
+			var errorDiv = document.getElementById(fieldId + '-error');
+			
+			if (field && errorDiv) {
+				field.classList.remove('error');
+				errorDiv.textContent = '';
+				errorDiv.style.display = 'none';
+			}
+		}
+
+		function clearAllErrors() {
+			clearError('name');
+			clearError('email');
+			clearError('subject');
+			clearError('message');
+		}
+
+		function validateForm() {
+			var name = document.getElementById('name').value;
+			var email = document.getElementById('email').value;
+			var subject = document.getElementById('subject').value;
+			var message = document.getElementById('message').value;
+			
+			var isValid = true;
+			
+			// Clear previous errors
+			clearAllErrors();
+			
+			// Validate name
+			var nameError = validateName(name);
+			if (nameError) {
+				showError('name', nameError);
+				isValid = false;
+			}
+			
+			// Validate email
+			var emailError = validateEmail(email);
+			if (emailError) {
+				showError('email', emailError);
+				isValid = false;
+			}
+			
+			// Validate subject
+			var subjectError = validateSubject(subject);
+			if (subjectError) {
+				showError('subject', subjectError);
+				isValid = false;
+			}
+			
+			// Validate message
+			var messageError = validateMessage(message);
+			if (messageError) {
+				showError('message', messageError);
+				isValid = false;
+			}
+			
+			return isValid;
+		}
+
+		// Real-time validation on input
+		document.getElementById('name').addEventListener('blur', function() {
+			var error = validateName(this.value);
+			if (error) {
+				showError('name', error);
+			} else {
+				clearError('name');
+			}
+		});
+
+		document.getElementById('email').addEventListener('blur', function() {
+			var error = validateEmail(this.value);
+			if (error) {
+				showError('email', error);
+			} else {
+				clearError('email');
+			}
+		});
+
+		document.getElementById('subject').addEventListener('blur', function() {
+			var error = validateSubject(this.value);
+			if (error) {
+				showError('subject', error);
+			} else {
+				clearError('subject');
+			}
+		});
+
+		document.getElementById('message').addEventListener('blur', function() {
+			var error = validateMessage(this.value);
+			if (error) {
+				showError('message', error);
+			} else {
+				clearError('message');
+			}
+		});
+
+		// Clear errors on input
+		document.getElementById('name').addEventListener('input', function() {
+			if (this.classList.contains('error')) {
+				var error = validateName(this.value);
+				if (!error) {
+					clearError('name');
+				}
+			}
+		});
+
+		document.getElementById('email').addEventListener('input', function() {
+			if (this.classList.contains('error')) {
+				var error = validateEmail(this.value);
+				if (!error) {
+					clearError('email');
+				}
+			}
+		});
+
+		document.getElementById('subject').addEventListener('input', function() {
+			if (this.classList.contains('error')) {
+				var error = validateSubject(this.value);
+				if (!error) {
+					clearError('subject');
+				}
+			}
+		});
+
+		document.getElementById('message').addEventListener('input', function() {
+			if (this.classList.contains('error')) {
+				var error = validateMessage(this.value);
+				if (!error) {
+					clearError('message');
+				}
+			}
+		});
+
 		// Contact Form Submission using Netlify Forms
 		document.getElementById('contact-form').addEventListener('submit', function(e) {
+			e.preventDefault();
+			
 			var form = this;
 			var submitBtn = document.getElementById('submit-btn');
 			var messageDiv = document.getElementById('form-message');
 			var originalBtnText = submitBtn.innerHTML;
+			
+			// Validate form
+			if (!validateForm()) {
+				// Show error message
+				messageDiv.classList.remove('alert-success');
+				messageDiv.classList.add('alert-danger');
+				messageDiv.innerHTML = 'Please fix the errors in the form before submitting.';
+				messageDiv.style.display = 'block';
+				
+				// Scroll to first error
+				var firstError = form.querySelector('.error');
+				if (firstError) {
+					firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+					firstError.focus();
+				}
+				return;
+			}
+			
+			// Clear all errors
+			clearAllErrors();
 			
 			// Disable submit button and show loading state
 			submitBtn.disabled = true;
 			submitBtn.innerHTML = 'Sending...';
 			messageDiv.style.display = 'none';
 			messageDiv.classList.remove('alert-success', 'alert-danger');
-			
-			// Let Netlify handle the form submission
-			// The form will submit normally to Netlify
-			// We'll intercept and show a custom message
 			
 			// Get form data
 			var formData = new FormData(form);
@@ -532,6 +744,7 @@
 				messageDiv.innerHTML = 'Thank you! Your message has been sent successfully. I will get back to you soon.';
 				messageDiv.style.display = 'block';
 				form.reset(); // Reset form
+				clearAllErrors(); // Clear any remaining errors
 				
 				// Scroll to message
 				setTimeout(function() {
