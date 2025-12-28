@@ -301,7 +301,12 @@
 						<!-- Success/Error Messages -->
 						<div id="form-message" class="alert" style="display: none;"></div>
 						
-						<form id="contact-form" method="POST" action="send-email.php">
+						<form id="contact-form" name="contact" method="POST" netlify netlify-honeypot="bot-field" data-netlify="true">
+							<!-- Hidden field for Netlify bot protection -->
+							<input type="hidden" name="form-name" value="contact">
+							<p style="display: none;">
+								<label>Don't fill this out if you're human: <input name="bot-field" /></label>
+							</p>
 							<div class="form-group">
 								<input class="form-control" type="text" name="name" id="name" placeholder="Your Name" required>
 							</div>
@@ -450,10 +455,8 @@
 			return false;
 		});
 
-		// Contact Form Submission using vanilla JavaScript
+		// Contact Form Submission using Netlify Forms
 		document.getElementById('contact-form').addEventListener('submit', function(e) {
-			e.preventDefault();
-			
 			var form = this;
 			var submitBtn = document.getElementById('submit-btn');
 			var messageDiv = document.getElementById('form-message');
@@ -465,82 +468,62 @@
 			messageDiv.style.display = 'none';
 			messageDiv.classList.remove('alert-success', 'alert-danger');
 			
+			// Don't prevent default - let Netlify handle it
+			// But we'll enhance with AJAX for better UX
+			
 			// Get form data
 			var formData = new FormData(form);
 			
-			// Check if running from file:// protocol
-			if (window.location.protocol === 'file:') {
-				messageDiv.classList.remove('alert-success');
-				messageDiv.classList.add('alert-danger');
-				messageDiv.innerHTML = '<strong>Error:</strong> Please run this site through a PHP server.<br><br>Double-click <code>start-server.bat</code> (Windows) or run <code>php -S localhost:8000</code> in terminal, then open <a href="http://localhost:8000" target="_blank">http://localhost:8000</a>';
-				messageDiv.style.display = 'block';
-				submitBtn.disabled = false;
-				submitBtn.innerHTML = originalBtnText;
-				return;
-			}
-			
-			// Send request using Fetch API
-			fetch('send-email.php', {
+			// Submit to Netlify via AJAX
+			fetch('/', {
 				method: 'POST',
-				body: formData,
-				headers: {
-					'X-Requested-With': 'XMLHttpRequest'
-				}
+				headers: { "Content-Type": "application/x-www-form-urlencoded" },
+				body: new URLSearchParams(formData).toString()
 			})
 			.then(function(response) {
-				// Check if response is ok
-				if (!response.ok) {
-					throw new Error('Network response was not ok');
-				}
-				// Try to parse JSON
-				return response.text().then(function(text) {
-					try {
-						return JSON.parse(text);
-					} catch (e) {
-						// If not JSON, show the response text
-						throw new Error('Invalid response from server: ' + text.substring(0, 100));
-					}
-				});
-			})
-			.then(function(data) {
-				if (data && data.success) {
+				if (response.ok) {
+					// Success
 					messageDiv.classList.remove('alert-danger');
 					messageDiv.classList.add('alert-success');
-					messageDiv.innerHTML = data.message;
+					messageDiv.innerHTML = 'Thank you! Your message has been sent successfully. I will get back to you soon.';
 					messageDiv.style.display = 'block';
 					form.reset(); // Reset form
+					
+					// Scroll to message
+					setTimeout(function() {
+						var messagePosition = messageDiv.getBoundingClientRect().top + window.pageYOffset - 100;
+						window.scrollTo({
+							top: messagePosition,
+							behavior: 'smooth'
+						});
+					}, 100);
 				} else {
-					messageDiv.classList.remove('alert-success');
-					messageDiv.classList.add('alert-danger');
-					messageDiv.innerHTML = data.message || 'An error occurred. Please try again.';
-					messageDiv.style.display = 'block';
+					throw new Error('Form submission failed');
 				}
 			})
 			.catch(function(error) {
+				// Error - but still allow form to submit normally as fallback
 				messageDiv.classList.remove('alert-success');
 				messageDiv.classList.add('alert-danger');
-				var errorMsg = 'Sorry, there was an error sending your message. ';
-				if (error.message) {
-					errorMsg += error.message;
-				} else {
-					errorMsg += 'Please check if PHP is running and send-email.php exists.';
-				}
-				messageDiv.innerHTML = errorMsg;
+				messageDiv.innerHTML = 'Sending your message... If this message persists, the form may have submitted successfully. Please check your email.';
 				messageDiv.style.display = 'block';
 				console.error('Form submission error:', error);
+				
+				// Allow normal form submission as fallback
+				setTimeout(function() {
+					form.submit();
+				}, 1000);
 			})
 			.finally(function() {
-				// Re-enable submit button
-				submitBtn.disabled = false;
-				submitBtn.innerHTML = originalBtnText;
-				
-				// Scroll to message
-				var messagePosition = messageDiv.getBoundingClientRect().top + window.pageYOffset - 100;
-				window.scrollTo({
-					top: messagePosition,
-					behavior: 'smooth'
-				});
+				// Re-enable submit button after a delay
+				setTimeout(function() {
+					submitBtn.disabled = false;
+					submitBtn.innerHTML = originalBtnText;
+				}, 2000);
 			});
+			
+			// Prevent default to handle via AJAX
+			e.preventDefault();
 		});
 	</script>
 </body>
