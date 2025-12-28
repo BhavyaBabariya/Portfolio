@@ -30,10 +30,26 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+	<!-- Loading Screen -->
+	<div id="loading-screen" class="loading-screen">
+		<div class="loading-content">
+			<div class="loading-logo">
+				<span class="logo-letter">B</span>
+				<span class="logo-letter">B</span>
+			</div>
+			<div class="loading-text">Bhavya Babariya</div>
+			<div class="loading-spinner">
+				<div class="spinner-ring"></div>
+				<div class="spinner-ring"></div>
+				<div class="spinner-ring"></div>
+			</div>
+		</div>
+	</div>
+
 	<div class="container">
 		<div class="nav_section">
 			<nav class="navbar navbar-expand-lg navbar-light sticky">
-<a class="navbar-brand text-white" href="#"><img src="Images/logo.png"></a>
+<a class="navbar-brand text-white" href="#"><span class="logo-text">Bhavya<span class="logo-accent">Babariya</span></span></a>
   <button class="navbar-toggler" style="border: none;" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <i class="text-white fa fa-bars" ></i>
   </button>
@@ -75,7 +91,7 @@
 					<h3>Hello!</h3>
 					<h1>I<span style="color:#f87652;">'</span>m Bhavya Babariya</h1>
 					<h2>PHP | WordPress | Webflow  Developer</h2>
-					<p>I have 6 Months of Exprience in Wordpress PHP Website Development. I have also Worked in Live Websites.</p>
+					<p>I have 2.5 years of experience in WordPress development using Elementor. I have also worked on live websites and can create professional websites according to your needs.</p>
 					<div class="btn-container">
 						<button class="btn btn-light animate_animated">Hire Me</button>
 					</div>
@@ -107,7 +123,7 @@
 				<div class="col-lg-6 col-md-6 col-ms-12 col-xs-12 about_me_right_section">
 					<h2 id="heading">About Me</h2>
 					<hr>
-					<p id="txt">Hello, My name is Bhavya Babariya and I am professional PHP WordPress Developer, I can Create website according to your needs.</p>
+					<p id="txt">Hello, My name is Bhavya Babariya and I am a professional PHP WordPress Developer with 2.5 years of experience using Elementor. I can create websites according to your needs with modern design and functionality.</p>
 					<table class="table">
 						<tr>
 							<td>Name</td>
@@ -352,7 +368,7 @@
 					<a class="navbar-brand text-white" href="#">
 						BB Portfoilio<span style ="color: #f87652;">.</span>
 					</a>
-					<p>Hello, My name is Bhavya Babariya and I am professional PHP WordPress Developer, I can Create website according to your needs.</p>
+					<p>Hello, My name is Bhavya Babariya and I am a professional PHP WordPress Developer with 2.5 years of experience using Elementor. I can create websites according to your needs with modern design and functionality.</p>
 					<div class="links">
 						<a href="https://facebook.com/bhavya.babariya/"><i class="fa fa-facebook-square animate__animated"></i></a> 
 						<a href="https://www.instagram.com/bhavya_2365"><i class="fa fa-instagram px-1 animate__animated"></i></a> 
@@ -408,6 +424,34 @@
   
 	<script type="text/javascript" src="js/app.js"></script>
 	<script type="text/javascript" src="js/particles.js"></script>
+	
+	<!-- Loading Screen Script -->
+	<script>
+		window.addEventListener('load', function() {
+			// Wait for all resources to load
+			setTimeout(function() {
+				var loadingScreen = document.getElementById('loading-screen');
+				if (loadingScreen) {
+					loadingScreen.classList.add('hidden');
+					// Remove from DOM after animation completes
+					setTimeout(function() {
+						loadingScreen.style.display = 'none';
+					}, 500);
+				}
+			}, 500); // Minimum display time for smooth experience
+		});
+
+		// Fallback: Hide loading screen after maximum wait time
+		setTimeout(function() {
+			var loadingScreen = document.getElementById('loading-screen');
+			if (loadingScreen && !loadingScreen.classList.contains('hidden')) {
+				loadingScreen.classList.add('hidden');
+				setTimeout(function() {
+					loadingScreen.style.display = 'none';
+				}, 500);
+			}
+		}, 5000); // Maximum 5 seconds
+	</script>
 	
 	<!-- Prevent background scrolling when mobile menu is open -->
 	<script>
