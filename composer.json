@@ -1,0 +1,13 @@
+{
+    "name": "portfolio/contact-form",
+    "description": "Portfolio contact form with PHPMailer",
+    "require": {
+        "phpmailer/phpmailer": "^6.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}
+
