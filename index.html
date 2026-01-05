@@ -30,6 +30,51 @@
   />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<!-- Early Connection Speed Detection -->
+	<script>
+		// Check connection speed early and store result
+		(function() {
+			var isSlowConnection = true; // Default to slow (safe default)
+			
+			// Check Network Information API
+			if ('connection' in navigator) {
+				var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+				if (connection) {
+					var effectiveType = connection.effectiveType;
+					var downlink = connection.downlink;
+					
+					// Fast if: 4g with good speed, or 3g with decent speed
+					if (effectiveType === '4g' || (effectiveType === '3g' && downlink && downlink >= 1.5)) {
+						isSlowConnection = false;
+					} else if (effectiveType === '2g' || effectiveType === 'slow-2g' || (downlink && downlink < 1.5)) {
+						isSlowConnection = true;
+					}
+					
+					// If data saver is enabled, treat as slow
+					if (connection.saveData) {
+						isSlowConnection = true;
+					}
+				}
+			}
+			
+			// Store result for later use
+			window.__connectionSpeed = {
+				isSlow: isSlowConnection,
+				checked: true
+			};
+			
+			// If fast connection and page already loaded, hide loading screen immediately
+			if (!isSlowConnection && document.readyState === 'complete') {
+				setTimeout(function() {
+					var loadingScreen = document.getElementById('loading-screen');
+					if (loadingScreen) {
+						loadingScreen.style.display = 'none';
+					}
+				}, 0);
+			}
+		})();
+	</script>
 </head>
 <body>
 	<!-- Loading Screen -->
@@ -433,30 +478,85 @@
 	
 	<!-- Loading Screen Script -->
 	<script>
-		window.addEventListener('load', function() {
-			// Wait for all resources to load
-			setTimeout(function() {
-				var loadingScreen = document.getElementById('loading-screen');
-				if (loadingScreen) {
+		(function() {
+			var loadingScreen = document.getElementById('loading-screen');
+			var pageLoadStart = performance.timing ? performance.timing.navigationStart : Date.now();
+			
+			// Get connection speed from early detection or check again
+			var isSlowConnection = true; // Default to slow (safe)
+			if (window.__connectionSpeed && window.__connectionSpeed.checked) {
+				isSlowConnection = window.__connectionSpeed.isSlow;
+			} else {
+				// Re-check if early detection didn't run
+				if ('connection' in navigator) {
+					var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+					if (connection) {
+						var effectiveType = connection.effectiveType;
+						var downlink = connection.downlink;
+						if (effectiveType === '4g' || (effectiveType === '3g' && downlink && downlink >= 1.5)) {
+							isSlowConnection = false;
+						} else if (effectiveType === '2g' || effectiveType === 'slow-2g' || (downlink && downlink < 1.5)) {
+							isSlowConnection = true;
+						}
+						if (connection.saveData) {
+							isSlowConnection = true;
+						}
+					}
+				}
+			}
+			
+			// Function to hide loading screen
+			function hideLoadingScreen() {
+				if (loadingScreen && !loadingScreen.classList.contains('hidden')) {
 					loadingScreen.classList.add('hidden');
-					// Remove from DOM after animation completes
 					setTimeout(function() {
 						loadingScreen.style.display = 'none';
-					}, 500);
+					}, 300);
 				}
-			}, 500); // Minimum display time for smooth experience
-		});
-
-		// Fallback: Hide loading screen after maximum wait time
-		setTimeout(function() {
-			var loadingScreen = document.getElementById('loading-screen');
-			if (loadingScreen && !loadingScreen.classList.contains('hidden')) {
-				loadingScreen.classList.add('hidden');
-				setTimeout(function() {
-					loadingScreen.style.display = 'none';
-				}, 500);
 			}
-		}, 5000); // Maximum 5 seconds
+			
+			// If connection is fast, hide loading screen quickly
+			if (!isSlowConnection) {
+				// For fast connections, hide as soon as DOM is ready
+				if (document.readyState === 'loading') {
+					document.addEventListener('DOMContentLoaded', function() {
+						setTimeout(hideLoadingScreen, 100);
+					});
+				} else {
+					// DOM already ready - hide immediately
+					setTimeout(hideLoadingScreen, 100);
+				}
+				
+				// Also hide on window load (in case DOMContentLoaded already fired)
+				window.addEventListener('load', function() {
+					hideLoadingScreen();
+				});
+			} else {
+				// For slow connections, wait for full page load
+				window.addEventListener('load', function() {
+					// Show loading screen for minimum time for better UX
+					var minDisplayTime = 1000; // 1 second minimum for slow connections
+					var loadTime = performance.timing ? 
+						(performance.timing.loadEventEnd - performance.timing.navigationStart) : 
+						(Date.now() - pageLoadStart);
+					
+					var remainingTime = Math.max(0, minDisplayTime - loadTime);
+					
+					setTimeout(function() {
+						hideLoadingScreen();
+					}, remainingTime);
+				});
+			}
+			
+			// Fallback: Hide loading screen after maximum wait time
+			// Longer timeout for slow connections, shorter for fast
+			var maxWaitTime = isSlowConnection ? 10000 : 2000;
+			setTimeout(function() {
+				if (loadingScreen && !loadingScreen.classList.contains('hidden')) {
+					hideLoadingScreen();
+				}
+			}, maxWaitTime);
+		})();
 	</script>
 	
 	<!-- Prevent background scrolling when mobile menu is open -->
