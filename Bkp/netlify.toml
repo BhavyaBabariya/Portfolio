@@ -1,0 +1,14 @@
+# Netlify configuration file
+[build]
+  publish = "."
+
+# Form settings
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Enable form submissions
+[build.environment]
+  NETLIFY_FORMS = "true"
+

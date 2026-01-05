@@ -1,0 +1,20 @@
+# Composer
+/vendor/
+composer.lock
+
+# Configuration files with sensitive data
+config.php
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
