@@ -758,7 +758,7 @@ h5 a:hover{
 
    /* Portfolio Section */
    .portfolio_section{
-	background: linear-gradient(180deg, rgba(40, 42, 57, 0.9) 0%, rgba(26, 29, 41, 0.95) 100%);
+	/* background: linear-gradient(180deg, rgba(40, 42, 57, 0.9) 0%, rgba(26, 29, 41, 0.95) 100%); */
 	padding: 120px 0 0;
 	position: relative;
    }
@@ -804,7 +804,7 @@ h5 a:hover{
 	color: var(--pink-color);
 	transition: color 0.3s ease;
    }
-   .portfolio_section .tab-content .card {
+   .portfolio_section .card {
 	margin-bottom: 20px;
 	border-radius: 12px;
 	overflow: hidden;
@@ -814,12 +814,12 @@ h5 a:hover{
 	box-shadow: var(--shadow-sm);
    }
    
-   .portfolio_section .tab-content .card:hover {
+   .portfolio_section .card:hover {
 	transform: translateY(-5px);
 	box-shadow: var(--shadow-lg);
    }
 
-   .portfolio_section .tab-content .card img{
+   .portfolio_section .card img{
 	border: none;
 	width: 100%;
 	height: auto;
@@ -827,8 +827,26 @@ h5 a:hover{
 	transition: transform 0.3s ease;
    }
    
-   .portfolio_section .tab-content .card:hover img {
+   .portfolio_section .card:hover img {
 	transform: scale(1.05);
+   }
+
+   .portfolio_section .card-body {
+	padding: 1rem 1.25rem;
+	border-top: 1px solid rgba(255,255,255,0.1);
+   }
+
+   .portfolio_section .card-title {
+	font-size: 1.1rem;
+	margin-bottom: 0.5rem;
+	color: #fff !important;
+   }
+
+   .portfolio_section .card-text {
+	font-size: 0.9rem;
+	line-height: 1.5;
+	color: rgba(255,255,255,0.8) !important;
+	margin-bottom: 0;
    }
 
    @media (max-width: 991px) {
@@ -858,8 +876,6 @@ h5 a:hover{
 	}
 	.portfolio_section .card-columns {
 		column-count: 1 !important;
-	}
-	.portfolio_section .tab-content {
 		padding: 20px 0 !important;
 	}
    }
@@ -1117,6 +1133,16 @@ h5 a:hover{
 		margin: -3px 0;
 		color: white;
 		transition: 0.5s !important;
+	}
+	.useful-links{
+		color: white !important;
+	}
+	.useful-links:hover {
+		color: var(--pink-color) !important;
+	}
+	
+	.useful-links:hover i {
+		color: #fff !important;
 	}
 	.footer-area .list-group .list-group-item:hover i{
 		padding-right: 10px;
